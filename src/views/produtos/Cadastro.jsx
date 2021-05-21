@@ -7,7 +7,8 @@ const estadoInicial = {
     preco: 0.0,
     fornecedor: '',
     quantidade: 0,
-    msgSucesso: false
+    msgSucesso: false,
+    errors: []
 }
 export default class CadastroProdutos extends Component {
 
@@ -33,9 +34,15 @@ export default class CadastroProdutos extends Component {
             fornecedor: this.state.fornecedor,
             quantidade: this.state.quantidade
         }
-        this.service.salvar(produto)
-        this.limparCampos()
-        this.setState({msgSucesso: true})
+        try {
+            this.service.salvar(produto)
+            this.limparCampos()
+            this.setState({ msgSucesso: true })
+        } catch (erro) {
+            const errors = erro.errors
+            this.setState({errors: errors})
+        }
+
     }
 
     limparCampos = (event) => {
@@ -48,14 +55,27 @@ export default class CadastroProdutos extends Component {
             <div className='card'>
                 <div className='card-header'>Cadastro de Produtos</div>
                 <div className='card-body'>
-                    {/* SE FOR VERDADEIRO IMPRIMA ALERTA  SENAO FAÇA NADA*/}
+                    {/* SE FOR VERDADEIRO IMPRIMA ALERTA SUCESSO  SENAO FAÇA NADA*/}
                     {this.state.msgSucesso &&
-                
-                            <div class="alert alert-dismissible alert-success">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                <strong>Salvo com Sucesso!</strong> Produto foi cadastrado.
+
+                        <div class="alert alert-dismissible alert-success">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <strong>Salvo com Sucesso!</strong> Produto foi cadastrado.
                             </div>
-                    
+                    }
+                    {/* FIM ALERTA */}
+
+                    {/* SE FOR VERDADEIRO IMPRIMA ALERTA ERRO  SENAO FAÇA NADA*/}
+                    {this.state.errors.length > 0 &&
+
+                        this.state.errors.map(msg => {
+                            return (
+                                <div class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    <strong>Erro!</strong> {msg}
+                                </div>
+                            )
+                        })
                     }
                     {/* FIM ALERTA */}
 
