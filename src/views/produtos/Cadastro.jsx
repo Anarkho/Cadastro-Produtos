@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
 import ProdutoService from '../../services/ProdutoService'
+import { withRouter } from 'react-router-dom'
+
 const estadoInicial = {
     nome: '',
     sku: '',
     descricao: '',
-    preco: 0.0,
+    preco: 0,
     fornecedor: '',
     quantidade: 0,
     msgSucesso: false,
-    errors: []
+    errors:[],
 }
-export default class CadastroProdutos extends Component {
-
+class CadastroProdutos extends Component {
+    
     state = estadoInicial
-
+    atualizando = false
+    
     constructor() {
         super()
         this.service = new ProdutoService()
@@ -40,38 +43,54 @@ export default class CadastroProdutos extends Component {
             this.setState({ msgSucesso: true })
         } catch (erro) {
             const errors = erro.errors
-            this.setState({errors: errors})
+            this.setState({ errors: errors })
         }
 
     }
 
     limparCampos = (event) => {
         this.setState(estadoInicial)
-        console.log(this.state)
+        
     }
 
+    componentDidMount() {
+        const sku = this.props.match.params.sku
+        if (sku) {
+            const resultado = this.service.obterProdutos().filter((produto, i) => produto.sku === sku)
+            if (resultado.length === 1) {
+                const produtoEncontrado = resultado[0]
+                this.atualizando = true
+                this.setState({ ...produtoEncontrado })
+            }
+        }
+    }
+    
     render() {
+        
         return (
             <div className='card'>
-                <div className='card-header'>Cadastro de Produtos</div>
+                <div className='card-header'>
+                    {this.atualizando ? 'Atualização ' : 'Cadastro'} de Produtos
+                    </div>
                 <div className='card-body'>
                     {/* SE FOR VERDADEIRO IMPRIMA ALERTA SUCESSO  SENAO FAÇA NADA*/}
                     {this.state.msgSucesso &&
 
-                        <div class="alert alert-dismissible alert-success">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <strong>Salvo com Sucesso!</strong> Produto foi cadastrado.
+                        <div className="alert alert-dismissible alert-success">
+                            <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+                            <strong>Salvo com Sucesso! </strong>
+
+                            Produto foi {this.atualizando ? ' atualizado' : ' cadastrado'}.
                             </div>
                     }
                     {/* FIM ALERTA */}
-
                     {/* SE FOR VERDADEIRO IMPRIMA ALERTA ERRO  SENAO FAÇA NADA*/}
                     {this.state.errors.length > 0 &&
 
-                        this.state.errors.map(msg => {
+                        this.state.errors.map((msg,i) => {
                             return (
-                                <div class="alert alert-dismissible alert-danger">
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <div className="alert alert-dismissible alert-danger">
+                                    <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
                                     <strong>Erro!</strong> {msg}
                                 </div>
                             )
@@ -102,6 +121,7 @@ export default class CadastroProdutos extends Component {
                                     maxLength='14'
                                     name='sku'
                                     type="text"
+                                    disabled={this.atualizando}
                                     className='form-control'
                                     onChange={this.onChange}
                                     value={this.state.sku}
@@ -167,7 +187,9 @@ export default class CadastroProdutos extends Component {
 
                     <div className="row">
                         <div className="col-md-1 mt-2">
-                            <button onClick={this.onSubmit} className="btn btn-success">Salvar</button>
+                            <button onClick={this.onSubmit} className="btn btn-success">
+                                {this.state.atualizando ? 'Atualizar' : 'Salvar'}
+                            </button>
                         </div>
 
                         <div className="col-md-1 mt-2">
@@ -177,9 +199,9 @@ export default class CadastroProdutos extends Component {
 
                 </div>
 
-
-
             </div>
         )
     }
 }
+
+export default withRouter(CadastroProdutos) // withrouter para ter medodos de decoração
