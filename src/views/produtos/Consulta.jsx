@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Card from '../../components/Card'
 import ProdutoService from '../../services/ProdutoService'
+import TabelaProdutos from '../produtos/TabelaDeProdutos'
 
 import { withRouter } from 'react-router-dom'
 
@@ -32,38 +33,13 @@ class ConsultaProdutos extends Component {
     render() {
         return (
             <Card header="Consulta de Produtos">
-                
-                    <table className='table table-hover'>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>SKU</th>
-                                <th>Preço</th>
-                                <th>Quantidade</th>
-                                <th>Fornecedor</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.produtos.map((produto, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <th>{produto.nome}</th>
-                                        <th style={{textTransform: 'uppercase'}}>{produto.sku}</th>
-                                        <th>R$ {produto.preco}</th>
-                                        <th>{produto.quantidade}</th>
-                                        <th>{produto.fornecedor}</th>
-                                        <th>
-                                            <button onClick={() => this.preparaEditar(produto.sku)} className="btn btn-primary">Editar</button>
-                                            <button onClick={() => this.deletar(produto.sku)} className="btn btn-danger">Remover</button>
-                                        </th>
-                                    </tr>
-                                )
-                            })
-                            }
-                        </tbody>
-                    </table>
-               
+
+                <TabelaProdutos
+                    produtos={this.state.produtos}
+                    editarAction={this.preparaEditar}
+                    deletarAction={this.deletar}>
+                </TabelaProdutos>
+
             </Card>
 
         )
