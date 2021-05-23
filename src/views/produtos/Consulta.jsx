@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Card from '../../components/Card'
 import ProdutoService from '../../services/ProdutoService'
 
 import { withRouter } from 'react-router-dom'
@@ -24,15 +25,14 @@ class ConsultaProdutos extends Component {
         this.props.history.push(`/cadastro-produtos/${sku}`)
     }
     deletar = (sku) => {
-       const produtos = this.service.deletar(sku)
-       this.setState({produtos})
+        const produtos = this.service.deletar(sku)
+        this.setState({ produtos })
     }
 
     render() {
         return (
-            <div className='card'>
-                <div className='card-header'>Consulta de Produtos</div>
-                <div className='card-body'>
+            <Card header="Consulta de Produtos">
+                
                     <table className='table table-hover'>
                         <thead>
                             <tr>
@@ -49,8 +49,8 @@ class ConsultaProdutos extends Component {
                                 return (
                                     <tr key={index}>
                                         <th>{produto.nome}</th>
-                                        <th>{produto.sku}</th>
-                                        <th>{produto.preco}</th>
+                                        <th style={{textTransform: 'uppercase'}}>{produto.sku}</th>
+                                        <th>R$ {produto.preco}</th>
                                         <th>{produto.quantidade}</th>
                                         <th>{produto.fornecedor}</th>
                                         <th>
@@ -63,8 +63,8 @@ class ConsultaProdutos extends Component {
                             }
                         </tbody>
                     </table>
-                </div>
-            </div>
+               
+            </Card>
 
         )
     }
