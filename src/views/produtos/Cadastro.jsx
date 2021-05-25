@@ -32,7 +32,7 @@ class CadastroProdutos extends Component {
     onSubmit = (event) => {
         event.preventDefault()
         const produto = {
-            nome: this.state.nome,
+            nome: this.state.nome.toLowerCase(),
             sku: this.state.sku,
             descricao: this.state.descricao,
             preco: this.state.preco,

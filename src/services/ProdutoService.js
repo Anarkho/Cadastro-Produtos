@@ -1,17 +1,27 @@
 const PRODUTOS = '_PRODUTOS ' //key
+const PESQUISA = '_PESQUISA'
+
 
 export function Errorvalidacao(erros) {
     this.errors = erros
 }
 
 export default class ProdutoService {
-
+    
     obterProdutos = () => {
+
         const produtos = localStorage.getItem(PRODUTOS)
+        const pesquisa = localStorage.getItem(PESQUISA)
         if (!produtos) {
             return []
         }
-        return JSON.parse(produtos)
+        if (pesquisa) {
+            return JSON.parse(pesquisa)
+        } else {
+
+            return JSON.parse(produtos)
+        }
+
     }
 
     validar = (produto) => {
@@ -50,18 +60,21 @@ export default class ProdutoService {
     }
 
     deletar = (sku) => {
+        localStorage.removeItem(PESQUISA, JSON.stringify(this.talp))
         const index = this.obterIndex(sku)
-        if(index !== null){
+        if (index !== null) {
             const produtos = this.obterProdutos()
-            produtos.splice(index,1)
+            produtos.splice(index, 1)
             localStorage.setItem(PRODUTOS, JSON.stringify(produtos))
+            
             return produtos // atualizado
         }
+        
     }
 
     salvar = (produto) => {
         this.validar(produto)
-
+        console.log('+', this.obterProdutos())
         let produtos = localStorage.getItem(PRODUTOS)
         if (!produtos) {
             produtos = []
@@ -69,15 +82,16 @@ export default class ProdutoService {
             produtos = JSON.parse(produtos) // string para array
         }
         const index = this.obterIndex(produto.sku)
-        
+
         if (index === null) {
             produtos.push(produto) // cadastro novo produto
         } else {
-            produtos.splice(index,1) // remove
-            produtos.splice(index,0,produto) //!  atualiza produto
+            produtos.splice(index, 1) // remove
+            produtos.splice(index, 0, produto) //!  atualiza produto
         }
 
         localStorage.setItem(PRODUTOS, JSON.stringify(produtos))
+        localStorage.removeItem(PESQUISA, JSON.stringify(this.talp))
     }
 
 }
