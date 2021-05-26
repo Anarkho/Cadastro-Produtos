@@ -23,7 +23,8 @@ const tabela = (props) => (
                         <th>{produto.fornecedor}</th>
                         <th>
                             <button 
-                            onClick={()=> props.editarAction(produto.sku)} 
+                            onClick={()=> props.editarAction(produto.sku)}
+                            style={{marginRight: '10px'}} 
                             className="btn btn-primary">
                                 Editar
                             </button>

@@ -7,6 +7,7 @@ export function Errorvalidacao(erros) {
 }
 
 export default class ProdutoService {
+    talp = []
     
     obterProdutos = () => {
 

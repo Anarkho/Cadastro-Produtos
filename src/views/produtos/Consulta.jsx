@@ -79,10 +79,13 @@ class ConsultaProdutos extends Component {
                     }}
                     onKeyUp={this.pesquisar}
                 />
-                <button onClick={()=> window.location.reload() } >
+                <button
+                className='btn btn-outline-primary'
+                 onClick={()=> window.location.reload() } >
                     Pesquisar
                 </button>
                 <button
+                    className='btn btn-outline-dark'
                     style={{ marginLeft: '10px' }}
                     onClick={() => {
                         window.location.reload()
